@@ -107,8 +107,9 @@ const parseDirectoryWithResults = async(strategy:string, parameters:Array<string
 
 
 async function main(): Promise<void> {
-	const width = 400;
-	const height = 400;
+	const width = 800;
+	// const height = 450;
+    const height = 800;
 	const colors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
 	const chartCallback: ChartCallback = (ChartJS) => {
 		ChartJS.defaults.responsive = true;
