@@ -1,4 +1,4 @@
-# SISE - Fiften puzzle solver algorithms 
+# SISE - Fifteen puzzle solver algorithms 
 <br/>
 <ol>
   <li>BFS - Breath First Search [direction moves]</li>
