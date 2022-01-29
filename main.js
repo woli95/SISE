@@ -3,6 +3,32 @@ const { Board } = require('./Board');
 const { ASTRSolver } = require('./ASTRSolver');
 const { BFSSolver } = require('./BFSSolver');
 const { DFSSolver } = require('./DFSSolver');
+
+
+
+//Parsing command line arguments
+const input_parameters = {
+    algorithm_strategy: process.argv[2],
+    strategy_additional_parameter: process.argv[3],
+    input_filepath: process.argv[4],
+    sol_filepath: process.argv[5],
+    stats_filepath: process.argv[6]
+}
+//Setting other parameters
+const initial_board = extractInitialBoardFromFile( __dirname + "/413ukladow/" + input_parameters.input_filepath);
+const solved_board_array = createSolvedBoard(initial_board.rows, initial_board.cols);
+let result = input_parameters.algorithm_strategy === 'astr'
+    ? new ASTRSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve()
+    : input_parameters.algorithm_strategy === 'bfs'
+        ? new BFSSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve()
+        : input_parameters.algorithm_strategy === 'dfs'
+            ? new DFSSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve()
+            : (() => {throw Error("Wrong strategy option")})();
+createResultFiles(result, __dirname + "/413ukladow/" + input_parameters.sol_filepath, __dirname + "/413ukladow/" + input_parameters.stats_filepath);
+
+
+//FUNCTION DEFINITIONS
+
 function extractInitialBoardFromFile(filepath) {
     let file = fs.readFileSync(filepath, 'utf-8').replace(/\n/gi, '');
     const lines = file.split('\r');
@@ -61,39 +87,4 @@ function createResultFiles(result, solFilepath, statsFilepath) {
                 '\n' +
                 result.solvingDuration)
     }
-}
-
-
-
-
-
-
-
-
-
-//Parsing command line arguments
-const input_parameters = {
-    algorithm_strategy: process.argv[2],
-    strategy_additional_parameter: process.argv[3],
-    input_filepath: process.argv[4],
-    sol_filepath: process.argv[5],
-    stats_filepath: process.argv[6]
-}
-//Setting other parameters
-const initial_board = extractInitialBoardFromFile( __dirname + "/413ukladow/" + input_parameters.input_filepath);
-const solved_board_array = createSolvedBoard(initial_board.rows, initial_board.cols);
-let result;
-switch(input_parameters.algorithm_strategy) {
-    case "astr":
-        result = new ASTRSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve();
-        createResultFiles(result, __dirname + "/413ukladow/" + input_parameters.sol_filepath, __dirname + "/413ukladow/" + input_parameters.stats_filepath);
-        break;
-    case "bfs":
-        result = new BFSSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve();
-        createResultFiles(result, __dirname + "/413ukladow/" + input_parameters.sol_filepath, __dirname + "/413ukladow/" + input_parameters.stats_filepath);
-        break;
-    case "dfs":
-        result = new DFSSolver(input_parameters.strategy_additional_parameter, initial_board, solved_board_array).solve();
-        createResultFiles(result, __dirname + "/413ukladow/" + input_parameters.sol_filepath, __dirname + "/413ukladow/" + input_parameters.stats_filepath);
-        break;
 }

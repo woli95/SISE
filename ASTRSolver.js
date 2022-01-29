@@ -18,7 +18,10 @@ class ASTRSolver {
     }
     solve() {
         const algorithm_start_time = performance.now();
-        const calculateDistance = this.distanceHeuristics === 'hamm' ? this.calculateHammingDistance : this.calculateManhattanDistance;
+        calculateDistance = this.distanceHeuristics === 'hamm' ? this.calculateHammingDistance : this.calculateManhattanDistance;
+        let visitedNodesCount = 0, 
+            processedNodesCount = 0;
+
 
         if(checkIfBoardIsSolved(this.initialBoardObject.boardArray, this.solvedBoardArray) === true) {
             return {
@@ -33,10 +36,11 @@ class ASTRSolver {
             this.openStates.enqueue(this.initialBoardObject, calculateDistance(this.initialBoardObject, this.solvedBoardArray));
             while(!this.openStates.isEmpty()) {
                 const current_board = this.openStates.dequeue();
+                processedNodesCount++;
                 this.processedStates.add(JSON.stringify(current_board.boardArray));
                 if (current_board.path.length > this.maximumDepth) 
                     this.maximumDepth = current_board.path.length;
-                let current_board_children = current_board.getChildren(['L', 'R', 'U', 'D']);
+                let current_board_children = current_board.getChildren(['D', 'R', 'U', 'L']);
                 for(let i = 0; i < current_board_children.length; i++) {
                     if (current_board_children[i].path.length > this.maximumDepth)
                         this.maximumDepth = current_board_children[i].path.length;
@@ -48,12 +52,15 @@ class ASTRSolver {
                             solvingDuration: performance.now() - algorithm_start_time,
                             solvedBoardObject: current_board_children[i],
                             maximumDepth: this.maximumDepth,
-                            visitedNodes: this.processedStates.size + this.openStates.queue.length,
-                            processedNodes: this.processedStates.size
+                            // visitedNodes: this.processedStates.size + this.openStates.queue.length,
+                            // processedNodes: this.processedStates.size
+                            visitedNodes: visitedNodesCount,
+                            processedNodes: processedNodesCount
                         }
                     }
                     else {
                         this.openStates.enqueue(current_board_children[i], calculateDistance(current_board_children[i], this.solvedBoardArray));
+                        visitedNodesCount++;
                     }
                 }
             }

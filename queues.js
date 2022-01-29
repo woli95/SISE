@@ -29,7 +29,7 @@ class PriorityQueue {
 
     doesContainArrayOfThisBoard(element) {
         for(let i = 0; i < this.queue.length; i++) {
-            if(_.isEqual(element.boardArray, this.queue[i].boardArray))
+            if(_.isEqual(element.boardArray, this.queue[i][0].boardArray))
                 return true;
         }
         return false;
@@ -66,6 +66,13 @@ class LifoQueue {
     }
     isEmpty() {
         return this.queue.length === 0;
+    }
+    doesContainArrayOfThisBoard(element) {
+        for(let i = 0; i < this.queue.length; i++) {
+            if(_.isEqual(element.boardArray, this.queue[i].boardArray))
+                return true;
+        }
+        return false;
     }
 }
 module.exports = { PriorityQueue, FifoQueue, LifoQueue };
