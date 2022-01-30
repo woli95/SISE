@@ -7,7 +7,7 @@ import  _  from 'lodash';
 interface createConfigurationProps {
 	canvasHeight: number,
 	canvasWidth: number,
-	yLabel: string,
+	title: string,
     type: "logarithmic" | "linear" | "category" | "time" | "radialLinear" | "timeseries",
 	datasets: ChartDataset<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[]>[],
 }
@@ -15,7 +15,7 @@ interface createConfigurationProps {
 const createConfiguration = ({
 	canvasHeight, 
 	canvasWidth, 
-	yLabel, 
+	title, 
     type,
 	datasets}:createConfigurationProps):ChartConfiguration => {
 	return {
@@ -25,30 +25,22 @@ const createConfiguration = ({
 			datasets: datasets
 		},
 		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: title,
+					font: {
+
+					}
+				}
+			},
 			scales: {
 				y: {
-                    min: 0,
-					title: {
-						display: true,
-						text: yLabel,
-						font: {
-							size: 16,
-							weight: 'bold'
-						},
-					},
                     type: type,
+					min: 0,
                     
 				},
 				x: {
-					title: {
-						display: true,
-						text: 'DEPTH',
-						font: {
-							size: 16,
-							weight: 'bold',
-							
-						}
-					},
 					grid: {
 						display: false
 					}
@@ -60,7 +52,7 @@ const createConfiguration = ({
 			beforeDraw: (chart) => {
 				const ctx = chart.ctx;
 				ctx.save();
-				ctx.fillStyle = '#DDDDDD';
+				ctx.fillStyle = '#EEEEEE';
 				ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 				ctx.restore();
 			}
@@ -110,9 +102,8 @@ const parseDirectoryWithResults = async(strategy:string, parameters:Array<string
 
 
 async function main(): Promise<void> {
-	const width = 800;
+	const width = 375;
     const height = 500;
-	// const height = 900;
 	const colors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
 	const chartCallback: ChartCallback = (ChartJS) => {
 		ChartJS.defaults.responsive = true;
@@ -128,7 +119,7 @@ async function main(): Promise<void> {
 	let configuration:ChartConfiguration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE LENGTH',
+		title: 'BFS - AVERAGE LENGTH',
         type: 'linear',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
@@ -146,7 +137,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE VISITED STATES',
+		title: 'BFS - AVERAGE VISITED STATES',
         type: 'logarithmic',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
@@ -163,7 +154,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE PROCESSED STATES',
+		title: 'BFS - AVERAGE PROCESSED STATES',
         type: 'logarithmic',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
@@ -180,7 +171,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE DEPTH ACHIEVED',
+		title: 'BFS - AVERAGE MAXIMUM DEPTH ACHIEVED',
         type: 'linear',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
@@ -197,7 +188,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE SOLVING DURATION [ms]',
+		title: 'BFS - AVERAGE SOLVING DURATION [ms]',
         type: 'logarithmic',
 		datasets: _.map(parameters, (param, idx) => {
 			return {

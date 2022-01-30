@@ -32,6 +32,7 @@ class BFSSolver {
                 if (current_board_children[i].path.length > this.maximumDepth)
                     this.maximumDepth = current_board_children[i].path.length;
                 if (!this.processedStates.has(JSON.stringify(current_board_children[i].boardArray))) {
+                    visitedNodesCount++;
                     if(checkIfBoardIsSolved(current_board_children[i].boardArray, this.solvedBoardArray)) {
                         return {
                             solvingDuration: performance.now() - algorithm_start_time,
@@ -45,7 +46,6 @@ class BFSSolver {
                     }
                     else {
                         this.openStates.enqueue(current_board_children[i]);
-                        visitedNodesCount++;
                     }
                 }
             }

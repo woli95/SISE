@@ -40,20 +40,18 @@ class DFSSolver {
                     if (current_board_children[i].path.length > this.maximumDepth)
                         this.maximumDepth = current_board_children[i].path.length;
                     if (!(this.processedStates.has(current_board_children[i].boardArray || this.openStates.doesContainArrayOfThisBoard(current_board_children[i])))) {
+                        visitedNodesCount++;
                         if(checkIfBoardIsSolved(current_board_children[i].boardArray, this.solvedBoardArray)) {
                             return {
                                 solvingDuration: performance.now() - algorithm_start_time,
                                 solvedBoardObject: current_board_children[i],
                                 maximumDepth: this.maximumDepth,
-                                // visitedNodes: this.processedStates.size + this.openStates.queue.length,
-                                // processedNodes: this.processedStates.size
                                 visitedNodes: visitedNodesCount,
                                 processedNodes: processedNodesCount
                             }
                         }
                         else {
                             this.openStates.enqueue(current_board_children[i]);
-                            visitedNodesCount++;
                         }
                     }
                 }

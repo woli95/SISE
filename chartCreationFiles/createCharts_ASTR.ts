@@ -7,7 +7,7 @@ import  _  from 'lodash';
 interface createConfigurationProps {
 	canvasHeight: number,
 	canvasWidth: number,
-	yLabel: string,
+	title: string,
 	datasets: ChartDataset<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[]>[],
 }
 interface resultsType {
@@ -16,7 +16,7 @@ interface resultsType {
 const createConfiguration = ({
 	canvasHeight, 
 	canvasWidth, 
-	yLabel, 
+	title, 
 	datasets}:createConfigurationProps):ChartConfiguration => {
 	return {
 		type: 'bar',
@@ -25,27 +25,17 @@ const createConfiguration = ({
 			datasets: datasets
 		},
 		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: title
+				}
+			},
 			scales: {
 				y: {
-					title: {
-						display: true,
-						text: yLabel,
-						font: {
-							size: 16,
-							weight: 'bold'
-						}
-					},
+					min: 0,
 				},
 				x: {
-					title: {
-						display: true,
-						text: 'DEPTH',
-						font: {
-							size: 16,
-							weight: 'bold',
-							
-						}
-					},
 					grid: {
 						display: false
 					}
@@ -57,7 +47,7 @@ const createConfiguration = ({
 			beforeDraw: (chart) => {
 				const ctx = chart.ctx;
 				ctx.save();
-				ctx.fillStyle = '#DDDDDD';
+				ctx.fillStyle = '#EEEEEE';
 				ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 				ctx.restore();
 			}
@@ -107,9 +97,8 @@ const parseDirectoryWithResults = async(strategy:string, parameters:Array<string
 
 
 async function main(): Promise<void> {
-	const width = 800;
+	const width = 375;
     const height = 500;
-	// const height = 900;
 	const colors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];
 	const chartCallback: ChartCallback = (ChartJS) => {
 		ChartJS.defaults.responsive = true;
@@ -126,7 +115,7 @@ async function main(): Promise<void> {
 	let configuration:ChartConfiguration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE LENGTH',
+		title: 'A* - AVERAGE LENGTH',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
 				label: param.toUpperCase(),
@@ -143,7 +132,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE VISITED STATES',
+		title: 'A* - AVERAGE VISITED STATES',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
 				label: param.toUpperCase(),
@@ -159,7 +148,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE PROCESSED STATES',
+		title: 'A* - AVERAGE PROCESSED STATES',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
 				label: param.toUpperCase(),
@@ -175,7 +164,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE DEPTH ACHIEVED',
+		title: 'A* - AVERAGE MAXIMUM DEPTH ACHIEVED',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
 				label: param.toUpperCase(),
@@ -191,7 +180,7 @@ async function main(): Promise<void> {
 	configuration = createConfiguration({
 		canvasHeight: height,
 		canvasWidth: width,
-		yLabel: 'AVERAGE SOLVING DURATION [ms]',
+		title: 'A* - AVERAGE SOLVING DURATION [ms]',
 		datasets: _.map(parameters, (param, idx) => {
 			return {
 				label: param.toUpperCase(),
